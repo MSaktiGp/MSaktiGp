@@ -13,7 +13,6 @@
         💬 Ask me about <b>C++, Java, or Web Dev</b><br>
         📫 <b>Reach me at:</b>
       </p>
-      
       <p>
         <a href="mailto:msg.pratama@gmail.com">
           <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" />
