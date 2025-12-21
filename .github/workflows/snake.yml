@@ -1,35 +1,48 @@
 name: Generate Snake
 
 on:
+  # Jalan otomatis setiap jam 12 malam
   schedule:
-    - cron: "0 */12 * * *" # dijalankan setiap 12 jam
+    - cron: "0 0 * * *" 
+  
+  # Tombol manual untuk run kapan saja
   workflow_dispatch:
+  
+  # Jalan setiap kali push ke main (opsional, buat ngetes)
+  push:
+    branches:
+    - main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    
-    # --- BAGIAN PENTING YANG KURANG ---
-    permissions:
+  generate:
+    permissions: 
       contents: write
-    # ----------------------------------
-
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    
     steps:
-      - uses: actions/checkout@v3
+      # Langkah 1: Checkout repo
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - uses: Platane/snk@v3
+      # Langkah 2: Buat folder dist (penting biar gak error directory not found)
+      - name: Create dist directory
+        run: mkdir -p dist
+
+      # Langkah 3: Generate Snake
+      - name: Generate Snake
+        uses: Platane/snk/svg-only@v3
         with:
-          # nama user github anda
           github_user_name: MSaktiGp
           outputs: |
-            dist/github-contribution-grid-snake.svg
-            dist/github-contribution-grid-snake-dark.svg?palette=github-dark
+            dist/snake.svg
+            dist/snake-dark.svg?palette=github-dark
         env:
-          # Token diperlukan di sini untuk mengambil grafik kontribusi jika profil privat
-          # Jika profil publik, ini opsional tapi disarankan
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: crazy-max/ghaction-github-pages@v3.1.0
+      # Langkah 4: Push ke branch output
+      - name: Push to Output Branch
+        uses: crazy-max/ghaction-github-pages@v3.1.0
         with:
           target_branch: output
           build_dir: dist
