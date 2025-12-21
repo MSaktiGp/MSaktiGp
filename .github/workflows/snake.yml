@@ -8,8 +8,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    
+    # --- BAGIAN PENTING YANG KURANG ---
+    permissions:
+      contents: write
+    # ----------------------------------
+
     steps:
       - uses: actions/checkout@v3
+
       - uses: Platane/snk@v3
         with:
           # nama user github anda
@@ -17,6 +24,11 @@ jobs:
           outputs: |
             dist/github-contribution-grid-snake.svg
             dist/github-contribution-grid-snake-dark.svg?palette=github-dark
+        env:
+          # Token diperlukan di sini untuk mengambil grafik kontribusi jika profil privat
+          # Jika profil publik, ini opsional tapi disarankan
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: crazy-max/ghaction-github-pages@v3.1.0
         with:
           target_branch: output
